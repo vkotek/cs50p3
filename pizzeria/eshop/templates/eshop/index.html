@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+Menu
+{% endblock %}
+
+{% block body %}
+<h1>Our Menu</h1>
+    <ul>
+        {% for item in menu %}
+            <li>
+                {{item}} <button class="to-cart" data-productId="{{item.id}}">Add to cart</button>
+            </li>
+        {% endfor %}
+    </ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        console.log('DOM fully loaded and parsed');
+        let addToCartButtons = document.getElementsByClassName('to-cart');
+        for ( let button of addToCartButtons ) { 
+            console.log(button)   
+            button.onclick = function() {
+                localStorage['cart'].push(button.data-productId);
+            };
+        }
+    });
+    
+</script>
+{% endblock %}

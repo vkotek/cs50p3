@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Order
+{% endblock %}
+
+{% block body %}
+<h1>My Order</h1>
+{% if message %}
+    <div>
+        {{ message }}
+    </div>
+{% endif %}
+Logged in as {{ user }}
+
+{% if cart %}
+  {% for item in cart %}
+    {{ item }}
+  {% endfor %}
+{% else %}
+  <p>Your cart is empty</p>
+{% endif %}
+
+{% endblock %}

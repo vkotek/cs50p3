@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+User
+{% endblock %}
+
+{% block body %}
+<h1>User</h1>
+{% if message %}
+    <div>
+        {{ message }}
+    </div>
+{% endif %}
+Logged in as {{ user }}
+{% load bootstrap4 %}
+<form action="{% url 'users:user' %}" method="post" class="form">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+
+  {% buttons %}
+    <button type="submit"/>
+      Update
+    </button>
+  {% endbuttons %}
+</form>
+
+{% endblock %}

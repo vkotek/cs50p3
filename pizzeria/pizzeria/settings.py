@@ -25,14 +25,16 @@ SECRET_KEY = '$5i17x(@md!!gd@x(!$5g7v^%ud#)#8#4abp_2%_0grwwk5+e0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    'kotek.co',
+]
 
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap4',
+    'users.apps.UsersConfig',
     'eshop.apps.EshopConfig',
-    'menu.apps.MenuConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +58,9 @@ ROOT_URLCONF = 'pizzeria.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            './templates/',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
