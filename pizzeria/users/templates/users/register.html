@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-{% load bootstrap4 %}
 
 {% block title %}
 Register
@@ -16,7 +15,7 @@ Register
   {% endif %}
   <form action="{% url 'users:register' %}" method="post">
       {% csrf_token %}
-      {% bootstrap_form form %}
+      {% form %}
       <input type="submit" value="Register"/>
   </form>
 </div>

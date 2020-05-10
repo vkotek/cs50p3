@@ -1,0 +1,84 @@
+[
+{
+    "model": "eshop.category",
+    "pk": 1,
+    "fields": {
+        "name": "Regular Pizza"
+    }
+},
+{
+    "model": "eshop.size",
+    "pk": 1,
+    "fields": {
+        "name": "Large"
+    }
+},
+{
+    "model": "eshop.size",
+    "pk": 2,
+    "fields": {
+        "name": "Small"
+    }
+},
+{
+    "model": "eshop.menuitem",
+    "pk": 1,
+    "fields": {
+        "category": 1,
+        "name": "Cheese",
+        "size": 2,
+        "price": "12.70",
+        "toppings": 0
+    }
+},
+{
+    "model": "eshop.menuitem",
+    "pk": 2,
+    "fields": {
+        "category": 1,
+        "name": "1 topping",
+        "size": 2,
+        "price": "13.70",
+        "toppings": 1
+    }
+},
+{
+    "model": "eshop.menuitem",
+    "pk": 3,
+    "fields": {
+        "category": 1,
+        "name": "2 toppings",
+        "size": 2,
+        "price": "15.20",
+        "toppings": 2
+    }
+},
+{
+    "model": "eshop.menuitem",
+    "pk": 4,
+    "fields": {
+        "category": 1,
+        "name": "3 toppings",
+        "size": 2,
+        "price": "16.20",
+        "toppings": 3
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$180000$evSncFD4KuUE$Ov8OO8E5oK1gyn3BsI+jAZ1mie7XC+MPcVylGQjBtZc=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "vojtech@kotek.co",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2020-05-02T07:49:33.543Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

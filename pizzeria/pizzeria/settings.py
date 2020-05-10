@@ -27,14 +27,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'kotek.co',
+    '127.0.0.1',
 ]
 
 # Application definition
 
 INSTALLED_APPS = [
-    'bootstrap4',
     'users.apps.UsersConfig',
     'eshop.apps.EshopConfig',
+    'api.apps.ApiConfig',
+    'rest_framework',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -124,3 +127,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+REST_FRAMEWORK = {}

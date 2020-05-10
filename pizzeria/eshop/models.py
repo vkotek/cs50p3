@@ -1,6 +1,21 @@
 from django.db import models
 from django.conf import settings
 
+class Category(models.Model):
+    name = models.CharField(max_length=32)
+
+    def __str__(self):
+        return f"{self.name}"
+
+class Size(models.Model):
+    name = models.CharField(max_length=32)
+
+    def __str__(self):
+        return f"{self.id}: {self.name}"
+
+    def __unicode__(self):
+        return '%s' % (self.name)
+
 class Order(models.Model):
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     order_date = models.DateTimeField(null=True)
@@ -13,15 +28,15 @@ class Order(models.Model):
 
 class OrderLine(models.Model):
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    order_id = models.ForeignKey('Order', on_delete=models.PROTECT)
+    order_id = models.ForeignKey('Order', on_delete=models.PROTECT, blank=True, null=True)
     item = models.ForeignKey('MenuItem', on_delete=models.PROTECT)
-    toppings = models.ManyToManyField('ItemTopping')
-    quantity = models.IntegerField()
-    unit_price = models.DecimalField(decimal_places=2, max_digits=5)
-    line_price = models.DecimalField(decimal_places=2, max_digits=5)
+    toppings = models.ManyToManyField(
+        'ItemTopping', 
+        blank=True,
+    )
 
     def __str__(self):
-        return f"{self.item}\n\tTOPPINGS: {self.toppings}\n\t{self.quantity} x {self.unit_price} = {self.line_price}"
+        return f"{self.item}"
 
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=32, null=True)
@@ -41,20 +56,9 @@ class MenuItem(models.Model):
 
 class ItemTopping(models.Model):
     name = models.CharField(max_length=32)
-    allowed_parents = models.ManyToManyField('MenuItem')
+    allowed_category = models.ForeignKey('Category', on_delete=models.CASCADE, default=False)
     price = models.DecimalField(decimal_places=2, max_digits=5)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.allowed_category} | {self.name} | ${self.price}"
 
-class Category(models.Model):
-    name = models.CharField(max_length=32)
-
-    def __str__(self):
-        return f"{self.name}"
-
-class Size(models.Model):
-    name = models.CharField(max_length=32)
-
-    def __str__(self):
-        return f"{self.id}: {self.name}"

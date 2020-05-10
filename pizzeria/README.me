@@ -1,0 +1,34 @@
+TODO:
+- Make order ID nullable in order line so it can be 'in cart' until order id is assigned?
+- API:
+    - get cart items
+    - add item to cart
+
+User flows:
+
+
+Add menu item to cart:
+1. On menu page, user clicks "+" next to a menu item.
+2. Function is called which checks if toppings are required, if yes, launch modal to choose toppings?
+3. Call API to add item to shopping cart
+4. FE request update of shopping cart?
+
+
+
+
+Questions:
+- How do we add toppings?
+- How do we store toppings in cart?
+
+
+
+Shell library:
+- python manage.py dumpdata --natural -e contenttypes -e auth.Permission -e sessions -e admin --indent=4 > data.json
+
+
+
+API:
+
+/api/v1/cart
+POST: Add item to cart
+GET: Get cart items of current user

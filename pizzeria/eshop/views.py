@@ -23,3 +23,4 @@ def menu(request):
         'menu': MenuItem.objects.all()
     }
     return render(request, 'eshop/index.html', context)
+
