@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import MenuItemSerializer, OrderLineSerializer, CartSerializer
-from eshop.models import MenuItem, OrderLine
+from django.core import serializers
+from .serializers import MenuItemSerializer, OrderLineSerializer, CartSerializer, ToppingsSerializer
+from eshop.models import MenuItem, OrderLine, ItemTopping
 
 from rest_framework import status
 # from rest_framework.decorators import api_view, action
@@ -20,8 +21,9 @@ class OrderLineViewSet(viewsets.ModelViewSet):
 
 
     def list(self, request):
+        print('OrderLineViewSet.list()')
         data = OrderLine.objects.filter(order_id__isnull=True, customer=request.user).order_by('item')
-        print(data)
+        print(data.values())
         
         return Response(data.values())
 
@@ -29,17 +31,43 @@ class OrderLineViewSet(viewsets.ModelViewSet):
 
         customer = request.user
         item = MenuItem.objects.get(id=request.data['item'])
-        # toppings = request.data['toppings']
-        OrderLine.objects.create(customer=customer, item=item)
+
+        new_line = OrderLine.objects.create(customer=customer, item=item, price=item.price)
+
+        if request.data['toppings']:
+            for topping_id in request.data.getlist('toppings'):
+                topping = ItemTopping.objects.get(pk=topping_id)
+                print("Adding topping:", topping_id, topping)
+                new_line.toppings.add(topping)
+                new_line.price = new_line.price + topping.price
+
         data = OrderLine.objects.filter(order_id__isnull=True, customer=request.user).order_by('item')
-        return Response(data)
+        print("VALUES:\n",data.values())
+
+        return Response(data.values())
 
     def destroy(self, request, pk=None):
-        print("Destroying something!!")
-        pass
+        print('OrderLineViewSet.destroy()')
+        result = OrderLine.objects.get(pk=pk).delete()
+        print(result)
+        return Response("OK!")
     
-class CartViewSet(viewsets.ModelViewSet):
+class CartViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = OrderLine.objects.filter(order_id__isnull=True ).order_by('item')
     serializer_class = CartSerializer
-    
+
+class ToppingsViewSet(viewsets.ReadOnlyModelViewSet):
+
+    queryset = ItemTopping.objects.all()
+    serializer_class = ToppingsSerializer
+
+    def list(self, request):
+        topping_options = ItemTopping.objects.all()
+        return Response(topping_options.values())
+
+    def retrieve(self, request, pk):
+        category_id = MenuItem.objects.get(pk=pk).category.id
+        topping_options = ItemTopping.objects.filter(allowed_categories__in=[category_id])
+
+        return Response(topping_options.values())

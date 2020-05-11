@@ -6,6 +6,7 @@ router = routers.DefaultRouter()
 router.register(r'menu', views.MenuItemViewSet)
 router.register(r'cart', views.OrderLineViewSet)
 router.register(r'cart-text', views.CartViewSet)
+router.register(r'toppings', views.ToppingsViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

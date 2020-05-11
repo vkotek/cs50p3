@@ -34,9 +34,10 @@ class OrderLine(models.Model):
         'ItemTopping', 
         blank=True,
     )
+    price = models.DecimalField(decimal_places=2, max_digits=5, null=True)
 
     def __str__(self):
-        return f"{self.item}"
+        return f"{self.item} | Toppings: {self.toppings}"
 
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=32, null=True)
@@ -56,9 +57,9 @@ class MenuItem(models.Model):
 
 class ItemTopping(models.Model):
     name = models.CharField(max_length=32)
-    allowed_category = models.ForeignKey('Category', on_delete=models.CASCADE, default=False)
+    allowed_categories = models.ManyToManyField('Category')
     price = models.DecimalField(decimal_places=2, max_digits=5)
 
     def __str__(self):
-        return f"{self.allowed_category} | {self.name} | ${self.price}"
+        return f"{self.name} | ${self.price}"
 

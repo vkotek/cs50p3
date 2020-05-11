@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from eshop.models import MenuItem, Size, Category, OrderLine
+from eshop.models import MenuItem, Size, Category, OrderLine, ItemTopping
 
 class MenuItemSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name')
@@ -20,9 +20,16 @@ class CartSerializer(serializers.ModelSerializer):
     item_name = serializers.CharField(source='item.name')
     item_category = serializers.CharField(source='item.category')
     item_price = serializers.CharField(source='item.price')
+    toppings_name = serializers.CharField(source='toppings.name')
 
     class Meta:
         model = OrderLine
-        fields = ('id', 'item_name', 'item_category', 'item_price', 'toppings')
+        fields = ('id', 'item_name', 'item_category', 'item_price', 'toppings_name')
 
     
+
+class ToppingsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ItemTopping
+        fields = ('name','allowed_categories', 'price')
