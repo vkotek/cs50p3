@@ -8,28 +8,38 @@ class MenuItemSerializer(serializers.ModelSerializer):
         model = MenuItem
         fields = ( 'id', 'name', 'price', 'toppings', 'size_name', 'category_name')
 
+# class OrderLineSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = OrderLine
+#         fields = ('id', 'customer','order_id', 'item', 'toppings')
+
 class OrderLineSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = OrderLine
-        fields = ('customer','order_id', 'item', 'toppings')
-
-
-class CartSerializer(serializers.ModelSerializer):
-
-    item_name = serializers.CharField(source='item.name')
-    item_category = serializers.CharField(source='item.category')
-    item_price = serializers.CharField(source='item.price')
-    toppings_name = serializers.CharField(source='toppings.name')
+    # toppings = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = OrderLine
-        fields = ('id', 'item_name', 'item_category', 'item_price', 'toppings_name')
-
+        fields = ('id', 'customer','order_id', 'item', 'toppings')
     
+    def create(self, request):
+
+        return OrderLine.objects.filter(order_id__isnull=True, customer=request.user).order_by('item')
+
+
 
 class ToppingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItemTopping
-        fields = ('name','allowed_categories', 'price')
+        fields = ('name', 'price')
+
+class CartSerializer(serializers.ModelSerializer):
+
+    item_name = serializers.CharField(source='item.name')
+    item_category = serializers.CharField(source='item.category')
+    toppings = ToppingsSerializer(many=True)
+
+    class Meta:
+        model = OrderLine
+        fields = ('id', 'item_name', 'item_category', 'price', 'toppings')

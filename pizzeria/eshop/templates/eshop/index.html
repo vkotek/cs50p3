@@ -11,17 +11,17 @@ Menu
 
 {% block body %}
 <h1>Our Menu</h1>
-<hr>
-<h3>Regular Pizza</h3>
-    <ul>
+    <table>
         {% for item in menu %}
-            <li>
-                {{item}} <button class="to-cart material-icons" style="display:contents; cursor: pointer; width: 1em;" data-productId="{{item.id}}">add_box</button>
-            </li>
+            <tr>
+                <td>{{item.category}}</td>
+                <td>{{item.name}}</td>
+                <td>${{item.price}}</td>
+                <td><button class="to-cart material-icons" style="display:contents; cursor: pointer; width: 1em;" data-productId="{{item.id}}">add_box</button></td>
+            </tr>
         {% endfor %}
-    </ul>
+    </table>
 
-<hr>
 <h1>Cart</h1>
 <ul id="cart">
 </ul>
@@ -29,10 +29,22 @@ Menu
 <table id="cart-table" class="table">
 </table>
 
+<!-- Modal Structure -->
+<div id="toppingsModal" class="modal">
+<div class="modal-content">
+    <h4>Choose your toppings!</h4>
+    <p>Allowed toppings: <span id="toppingCount">X</span<p>
+    <form id="toppings-form">
+    </form>
+</div>
+<div class="modal-footer">
+    <a href="#!" id="toppingsAdd" data-productid="" class="modal-close waves-effect waves-green btn">Add</a>
+</div>
+</div>
 <script>
+var modals = {};
     document.addEventListener('DOMContentLoaded', (event) => {
 
-        console.log('DOM fully loaded and parsed');
         reloadCart();
 
         let addToCartButtons = document.getElementsByClassName('to-cart');
@@ -44,7 +56,19 @@ Menu
 
             };
         }
+
+        var elem = document.getElementById('toppingsModal');
+        modals['toppings'] = M.Modal.init(elem);
+
+        var toppingsAdd = document.getElementById('toppingsAdd');
+        toppingsAdd.onclick = function() {
+            id = toppingsAdd.dataset['productid']
+            toppings = getSelectedToppings();
+            console.log(toppings);
+            addToCart(id, toppings);
+        }
     });
+  
 
 function reloadCart() {
 
@@ -60,7 +84,7 @@ function reloadCart() {
             cartTable.innerHTML = "";
             var total_price = 0.0;
             for ( let item of response) {
-                total_price = total_price + parseFloat(item.item_price);
+                total_price = total_price + parseFloat(item.price);
                 var tr = document.createElement("tr");
                 tr.setAttribute("id", item.id);
 
@@ -70,11 +94,13 @@ function reloadCart() {
                 tr.appendChild(td1);
 
                 var td2 = document.createElement("td");
-                td2.appendChild( document.createTextNode(`${item.toppings}`));
+                for ( let topping of item.toppings ) {
+                    td2.appendChild( document.createTextNode(`${topping.name}, `));
+                }
                 tr.appendChild(td2);
 
                 var td3 = document.createElement("td");
-                td3.appendChild( document.createTextNode(`$ ${item.item_price}`));
+                td3.appendChild( document.createTextNode(`$ ${item.price}`));
                 tr.appendChild(td3);
 
                 var td4 = document.createElement("td");
@@ -104,7 +130,7 @@ function reloadCart() {
     request.send();
 }
 
-function addToCart(item) {
+function addToCart(item, toppings=false) {
 
     const request = new XMLHttpRequest();
     request.open('POST', `/api/v1/cart/`);
@@ -113,24 +139,31 @@ function addToCart(item) {
     request.setRequestHeader('Content-Type', 'application/json');
     request.onload = () => {
         const response = request.responseText;
-        if ( request.status == 202 ) {
-            // TODO: Implement 202 status in API and to request more info i.e. toppings, maybe send options in the response?
-            console.log(response);
+        if ( request.status == 202 & toppings == false ) {
+            modals['toppings'].open();
+            toppings = getToppings(item);
+            console.log("toppings:", toppings);
+            
+
+            console.log("202 returned!");
         } else if ( request.status == 200 ) {
+            console.log("200");
             console.log(response);
             M.toast({html: 'Item added to cart!'});
         } else {
+            console.log("Error");
             M.toast({html: 'Something went wrong..'});
             console.log(response);
         }
     }
-    var customer = 1; // TODO: This needs to be somehow fixed...
-    let data = JSON.stringify({'customer':customer,'item':item});
+    let data = JSON.stringify({'item':item, 'toppings':toppings});
     request.send(data);
 
     setTimeout(function(){
         reloadCart();
     }, 200);
+
+    return false;
 };
 
 function removeFromCart(itemId) {
@@ -156,6 +189,52 @@ function removeFromCart(itemId) {
     }, 100);
 }
 
+function getToppings(itemId) {
+
+    const request = new XMLHttpRequest();
+    request.open('GET', `/api/v1/toppings/${itemId}`);
+    request.setRequestHeader('Accept', 'application/json');
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.onload = () => {
+        const response = request.responseText;
+        if ( request.status == 200 ) {
+            populateToppingsToModal( JSON.parse(response) );
+            document.getElementById('toppingsAdd').dataset['productid'] = itemId;
+
+        } else {
+            M.toast({html: 'Something went wrong..'});
+        }
+    }
+    request.send();
+
+    setTimeout(function(){
+        reloadCart();
+    }, 100);
+}
+
+function populateToppingsToModal(toppings) {
+
+    option_form = document.getElementById('toppings-form');
+    option_form.innerHTML = "";
+    for (topping of Object.values(toppings)) {
+        var option = document.createElement('p');
+        option.innerHTML = `<label><input type="checkbox" class="" value="${topping.id}" /><span>${topping.name} ($${topping.price})</span></label>`;    
+        option_form.appendChild(option);
+    }
+}
+
+function getSelectedToppings() {
+    var array = []
+    var checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
+
+    for (var i = 0; i < checkboxes.length; i++) {
+    array.push(checkboxes[i].value)
+    }
+
+    return array;
+}
+
+
 // Gets an item from the cookie, e.g. the CSRF token for submitting AJAX requests
 function getCookie(name) {
     var cookieValue = null;
@@ -173,6 +252,19 @@ function getCookie(name) {
     return cookieValue;
 }
 var csrftoken = getCookie('csrftoken');
+
+// Not used
+function ajax(url) {
+    return new Promise(function(resolve, reject) { 
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            resolve(this.responseText);
+        }
+        xhr.onerror = reject;
+        xhr.open('GET', url);
+        xhr.send();
+    })
+}
 
 </script>
 
