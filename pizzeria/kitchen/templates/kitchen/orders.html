@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+Kitchen
+{% endblock %}
+
+{% block body %}
+
+Logged in as {{ user }}
+
+<table id="kitchen-table" class="table">
+{% for order in orders %}
+<tr>
+  <td>{{ order.id }}</td>
+  <td>{{ order.order_date }}</td>
+  <td>{% if order.completed_date %}Completed{% else %}In progress{% endif %}</td>
+  <td>${{ order.total_price }}</td>
+  <td>Mark as done</td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from django.core import serializers
-from .serializers import MenuItemSerializer, OrderLineSerializer, CartSerializer, ToppingsSerializer
-from eshop.models import MenuItem, OrderLine, ItemTopping
+from .serializers import MenuItemSerializer, OrderLineSerializer, CartSerializer, ToppingsSerializer, OrderSerializer
+from eshop.models import MenuItem, OrderLine, ItemTopping, Order
+
+from django.db.models import Sum
+
+from datetime import datetime
 
 from rest_framework import status
 # from rest_framework.decorators import api_view, action
@@ -18,7 +22,6 @@ class OrderLineViewSet(viewsets.ModelViewSet):
 
     queryset = OrderLine.objects.filter(order_id__isnull=True).order_by('id')
     serializer_class = OrderLineSerializer
-
 
     # Get items in cart
     def list(self, request):
@@ -88,3 +91,33 @@ class ToppingsViewSet(viewsets.ReadOnlyModelViewSet):
         topping_options = ItemTopping.objects.filter(allowed_categories__in=[category_id])
 
         return Response(topping_options.values())
+
+class OrderViewSet(viewsets.ModelViewSet):
+
+    queryset = Order.objects.filter().order_by('id')
+    serializer_class = OrderSerializer
+
+    # Get items in cart
+    def list(self, request):
+        print('OrderViewSet.list()')
+        data = Order.objects.filter(customer=request.user).order_by('order_date')
+        
+        return Response(data.values())
+
+    def create(self, request):
+        print('OrderViewSet.create()')
+
+        # Get all items in cart
+        cart = OrderLine.objects.filter(order_id__isnull=True, customer=request.user.id)
+        cart_sum = cart.aggregate(Sum('price'))['price__sum']
+
+        # Create new order, fill in total cost
+        new_order = Order.objects.create(customer_id=request.user.id, total_price=cart_sum, order_date=datetime.now())
+        
+        # Fill in order ID to OrderLine
+        cart.update(order_id=new_order.id)
+
+        return Response({'response':"OK!"})
+
+
+        

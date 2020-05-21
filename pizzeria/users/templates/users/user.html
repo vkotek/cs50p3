@@ -15,7 +15,7 @@ Logged in as {{ user }}
 
 <form action="{% url 'users:user' %}" method="post" class="form">
   {% csrf_token %}
-  {% form %}
+  {% comment %} {% form %} {% endcomment %}
 
   {% buttons %}
     <button type="submit"/>

@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'eshop.apps.EshopConfig',
+    'kitchen.apps.KitchenConfig',
     'api.apps.ApiConfig',
     'rest_framework',
 

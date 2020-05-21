@@ -5,7 +5,6 @@ My Order
 {% endblock %}
 
 {% block body %}
-<h1>My Order</h1>
 {% if message %}
     <div>
         {{ message }}
@@ -13,12 +12,42 @@ My Order
 {% endif %}
 Logged in as {{ user }}
 
-{% if cart %}
-  {% for item in cart %}
-    {{ item }}
-  {% endfor %}
-{% else %}
-  <p>Your cart is empty</p>
-{% endif %}
+<h1>My Cart</h1>
+
+<table id="cart-table" class="table">
+</table>
+<br>
+<button class="btn right" id="completeOrder">Complete Order</button>
+
+<h1>My Orders</h1>
+
+<table id="orders-table" class="table">
+{% for order in orders %}
+<tr>
+  <td>{{ order.id }}</td>
+  <td>{{ order.order_date }}</td>
+  <td>{% if order.completed_date %}Completed{% else %}In progress{% endif %}</td>
+  <td>${{ order.total_price }}</td>
+</tr>
+{% endfor %}
+</table>
+
+
+{% endblock %}
+
+{% block footer %}
+<script>
+var modals = {};
+document.addEventListener('DOMContentLoaded', (event) => {
+
+    reloadCart();
+
+    var completeOrderButton = document.getElementById('completeOrder');
+    completeOrderButton.onclick = function () {
+      M.toast({html: "Completing order.."});
+      completeOrder();
+    }
+});
+</script>
 
 {% endblock %}
