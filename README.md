@@ -28,3 +28,7 @@ python manage.py loaddata data.json
 ### Order Management
 - Items added to cart are created in OrderLine but without an order ID
 - Once order is submitted, a Order record is created and the order id for OrderLine items for given user are populated
+
+### Extras
+- The 'Special' pizza allows 5 toppings
+- Up to 5 paid toppings can be added to any sub
