@@ -6,7 +6,8 @@ python manage.py loaddata data.json
 
 ## Overview
 
-Build using [Materialize]() - A modern responsive front-end framework based on Material Design
+- Build using [Materialize]() - A modern responsive front-end framework based on Material Design
+- Using rest_framework to manage backend API calls
 
 ### Entity Relationship Diagram
 ![](images/ERD.png)
