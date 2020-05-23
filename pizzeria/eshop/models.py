@@ -29,8 +29,8 @@ class Order(models.Model):
 
 class OrderLine(models.Model):
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    order_id = models.ForeignKey('Order', on_delete=models.PROTECT, blank=True, null=True)
-    item = models.ForeignKey('MenuItem', on_delete=models.PROTECT)
+    order_id = models.ForeignKey('Order', on_delete=models.CASCADE, blank=True, null=True)
+    item = models.ForeignKey('MenuItem', on_delete=models.SET_NULL, null=True)
     toppings = models.ManyToManyField(
         'ItemTopping', 
         blank=True,
@@ -51,7 +51,7 @@ class MenuItem(models.Model):
     name = models.CharField(max_length=32)
     size = models.ForeignKey('Size', on_delete=models.CASCADE)
     price = models.DecimalField(decimal_places=2, max_digits=5, default=0)
-    toppings = models.IntegerField() # How many toppings can you add?
+    toppings = models.IntegerField(default=0) # How many toppings can you add?
 
     def __str__(self):
         return f"{self.category} | {self.name} ({self.size.name}) . . . . . . . . ${self.price}"
@@ -60,6 +60,9 @@ class ItemTopping(models.Model):
     name = models.CharField(max_length=32)
     allowed_categories = models.ManyToManyField('Category')
     price = models.DecimalField(decimal_places=2, max_digits=5)
+
+    def get_categories(self):
+        return ", ".join([p.name for p in self.allowed_categories.all()])
 
     def __str__(self):
         return f"{self.name} | ${self.price}"

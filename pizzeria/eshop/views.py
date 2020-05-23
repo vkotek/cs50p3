@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from .models import Order, OrderLine, MenuItem
+from .models import Order, OrderLine, MenuItem, Category
 
 # Create your views here.
 
@@ -22,12 +22,23 @@ def orders(request):
 
     cart = OrderLine.objects.filter(customer=user_id)
 
-
     return render(request, 'eshop/cart.html', context)
 
 def menu(request):
     context = {
-        'menu': MenuItem.objects.all()
+        'menu': {},
     }
-    return render(request, 'eshop/index.html', context)
 
+    items = MenuItem.objects.all()
+
+    # Merge items with different sizes by name?
+    items_merged = []
+
+
+    # Sort items by category
+    categories = { x.category_id for x in items } 
+    for category in categories:
+        category_name = Category.objects.get(pk=category).name
+        context['menu'][category_name] = items.filter(category_id = category)
+
+    return render(request, 'eshop/index.html', context)

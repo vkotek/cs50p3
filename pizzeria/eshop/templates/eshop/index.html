@@ -11,16 +11,32 @@ Menu
 
 {% block body %}
 <h1>Our Menu</h1>
-    <table>
-        {% for item in menu %}
-            <tr>
-                <td>{{item.category}}</td>
-                <td>{{item.name}}</td>
-                <td>${{item.price}}</td>
-                <td><button class="to-cart material-icons" style="display:contents; cursor: pointer; width: 1em;" data-productId="{{item.id}}">add_box</button></td>
-            </tr>
-        {% endfor %}
-    </table>
+
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs">
+            {% for category, items in menu.items %}
+                <li class="tab col s2"><a href="#{{ category | slugify }}">{{ category }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% for category, items in menu.items %}
+        <div id="{{ category | slugify }}" class="col s12">
+            <table class="table striped">
+                {% for item in items  %}
+                    <tr>
+                        <td>{{item.name}}</td>
+                        <td>{{item.size.name}}</td>
+                        <td>${{item.price}}</td>
+                        <td><button class="to-cart material-icons" style="display:contents; cursor: pointer; width: 1em;" data-productId="{{item.id}}">add_box</button></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endfor %}
+
+</div>
 
 <h1>Cart</h1>
 <ul id="cart">

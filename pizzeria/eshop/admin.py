@@ -14,8 +14,6 @@ from .models import \
 # Register your models here.
 
 admin.site.register(PaymentMethod)
-admin.site.register(MenuItem)
-admin.site.register(ItemTopping)
 admin.site.register(Category)
 admin.site.register(Size)
 
@@ -34,3 +32,16 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderlineInline]
 
 admin.site.register(Order, OrderAdmin)
+
+class MenuItemAdmin(admin.ModelAdmin):
+    list_display = ['id', 'category', 'name', 'toppings', 'size', 'price']
+
+admin.site.register(MenuItem, MenuItemAdmin)
+
+class ItemToppingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'get_categories', 'name', 'price')
+
+admin.site.register(ItemTopping, ItemToppingAdmin)
+
+
+
