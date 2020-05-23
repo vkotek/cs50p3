@@ -11,11 +11,10 @@ python manage.py loaddata data.json
 - Using rest_framework to manage backend API calls
 
 ### Structure
-- Apps:
-  - eshop - Primary app holding all models except user
-  - user - Views for user management (authentication, registration, etc)
-  - api - Bak-end API for AJAX calls from the front-end
-  - kitchen - Kitchen view to manage all orders
+- eshop - Primary app holding all models except user
+- user - Views for user management (authentication, registration, etc)
+- api - Bak-end API for AJAX calls from the front-end
+- kitchen - Kitchen view to manage all orders
   
 ### Entity Relationship Diagram
 ![](images/ERD.png)
