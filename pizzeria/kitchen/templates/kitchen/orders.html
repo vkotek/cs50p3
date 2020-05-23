@@ -6,16 +6,14 @@ Kitchen
 
 {% block body %}
 
-Logged in as {{ user }}
-
 <table id="kitchen-table" class="table">
 {% for order in orders %}
 <tr>
   <td>{{ order.id }}</td>
   <td>{{ order.order_date }}</td>
-  <td>{% if order.completed_date %}Completed{% else %}In progress{% endif %}</td>
+  <td>{% if order.completed_date %}<i class="material-icons green">check_circle</i>{% else %}In progress{% endif %}</td>
   <td>${{ order.total_price }}</td>
-  <td>Mark as done</td>
+  <td><button class="btn" data-orderid='{{ order.id }}'onclick="completeOrder({{order.id}})" ="Complete"><i class="material-icons">check</i></button> </td>
 </tr>
 {% endfor %}
 </table>

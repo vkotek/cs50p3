@@ -10,14 +10,13 @@ My Order
         {{ message }}
     </div>
 {% endif %}
-Logged in as {{ user }}
 
 <h1>My Cart</h1>
 
 <table id="cart-table" class="table">
 </table>
 <br>
-<button class="btn right" id="completeOrder">Complete Order</button>
+<button class="btn right" id="submitOrder">Submit Order</button>
 
 <h1>My Orders</h1>
 
@@ -36,18 +35,50 @@ Logged in as {{ user }}
 {% endblock %}
 
 {% block footer %}
+
+<!-- Modal Structure -->
+<div id="orderCompleteModal" class="modal" style="max-width: 35em;">
+    <div class="modal-content">
+        <h4>Complete your order?</h4>
+        <p>Price of your order: $<span id="totalCostModal">X</span<p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" id="modalCancel" data-productid="" class="modal-close waves-effect red btn">Cancel</a>
+        <a href="#!" id="modalConfirm" data-productid="" class="modal-close waves-effect waves-green btn">Confirm</a>
+    </div>
+</div>
+
 <script>
-var modals = {};
-document.addEventListener('DOMContentLoaded', (event) => {
+  var modals = {};
+  document.addEventListener('DOMContentLoaded', (event) => {
 
-    reloadCart();
+      reloadCart();
 
-    var completeOrderButton = document.getElementById('completeOrder');
-    completeOrderButton.onclick = function () {
-      M.toast({html: "Completing order.."});
-      completeOrder();
-    }
-});
+      var modalElements = document.querySelectorAll('.modal');
+      for ( modalElement of modalElements ) {
+        modals[modalElement.id] = M.Modal.init(modalElement);
+      }
+
+      var modalConfirmButton = document.getElementById('modalConfirm');
+      modalConfirmButton.onclick = function () {
+        submitOrder();
+        setTimeout(function(){
+            reloadCart();
+        }, 200);
+        window.location.reload();
+        modals['orderCompleteModal'].close();
+      }
+      var submitOrderButton = document.getElementById('submitOrder');
+      submitOrderButton.onclick = function () {
+        document.getElementById('totalCostModal').innerHTML = document.getElementById('totalCost').innerHTML;
+        modals['orderCompleteModal'].open();
+      }
+      var modalCancelButton = document.getElementById('modalCancel');
+      modalCancelButton.onclick = function () {
+        modals['orderCompleteModal'].close();
+      }
+
+  });
 </script>
 
 {% endblock %}

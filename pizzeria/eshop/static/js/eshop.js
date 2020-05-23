@@ -47,7 +47,7 @@ function reloadCart() {
     
             var tr = document.createElement("tr");
             total_price = total_price.toFixed(2);
-            tr.innerHTML = `<td></td><td>Total:</td><td>$ ${total_price}</td><td></td>`;
+            tr.innerHTML = `<td></td><td>Total:</td><td>$ <span id="totalCost">${total_price}</span></td><td></td>`;
             cartTable.appendChild(tr);
             
 
@@ -164,7 +164,7 @@ function getSelectedToppings() {
     return array;
 }
 
-function completeOrder() {
+function submitOrder() {
 
     var csrftoken = getCookie('csrftoken');
 
@@ -184,11 +184,35 @@ function completeOrder() {
     request.send();
 
     setTimeout(function(){
-        reloadCart();
-    }, 100);
-    
-    reloadCart();
+        window.location.reload();
+    }, 1000);
 
+}
+
+function completeOrder(orderId) {
+
+    var csrftoken = getCookie('csrftoken');
+
+    const request = new XMLHttpRequest();
+    request.open('PUT', `/api/v1/order/${orderId}/`);
+    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('Accept', 'application/json');
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.onload = () => {
+        const response = request.responseText;
+        console.log(response);
+        if ( request.status == 200 ) {
+            M.toast({html: 'Order completed!'});
+        } else {
+            M.toast({html: 'Something went wrong..'});
+        }
+    }
+    request.send();
+
+    setTimeout(function(){
+        window.location.reload();
+    }, 1000);
+    
 }
 
 // Gets an item from the cookie, e.g. the CSRF token for submitting AJAX requests

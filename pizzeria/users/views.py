@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .forms import UserForm
+from .forms import UserForm, RegisterForm
 
 from django.contrib.auth.models import User
 
@@ -30,16 +30,20 @@ def user(request):
 def register(request):
 
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
-            new_user = form.save()
-            # authenticate(request)
+            new_user = form.save(commit=False)
+            new_user.username = form.cleaned_data.get('email')
+            new_user.save()
+
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
             return HttpResponseRedirect('/')
-        else:
-            return HttpResponse('failed.')
 
     else:
-        form = UserForm()
+        form = RegisterForm()
 
     return render(request, "users/register.html", {'form': form})
 
@@ -49,7 +53,7 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        return HttpResponseRedirect(reverse("users:user"))
+        return HttpResponseRedirect(reverse("eshop:menu"))
     else:
         return render(request, "users/login.html", {"message": "Invalid credentials."})
 

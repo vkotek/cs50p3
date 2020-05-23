@@ -10,7 +10,8 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="{% static "css/materialize.min.css" %}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static "css/materialize.css" %}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static "css/style.css" %}"  media="screen,projection"/>
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -22,11 +23,28 @@
   <body>
   
   <nav>
-      <div class="nav-wrapper">
+      <div class="nav-wrapper container">
         <a href="/" class="brand-logo"><i class="material-icons">fastfood</i>Pizzeria</a>
         <ul class="right hide-on-med-and-down">
-          <li><a href="{% url 'eshop:cart' %}"><i class="material-icons">menu_book</i></a></li>
-          <li><a href="{% url 'eshop:cart' %}"><i class="material-icons">person</i></a></li>
+
+          {% if user.is_authenticated %}
+          <li>{{ user }}</li>
+          {% endif %}
+          
+          <li><a href="{% url 'eshop:menu' %}" title="Food menu"><i class="material-icons">restaurant_menu</i></a></li>
+
+          {% if user %}
+          <li><a href="{% url 'eshop:cart' %}" title="Shopping cart"><i class="material-icons">local_grocery_store</i></a></li>
+          <li><a href="{% url 'users:logout' %}" title="My Account">Log out</a></li>
+          {% else %}
+          <li><a href="{% url 'users:user' %}" title="My Account">Log in</a></li>
+          <li><a href="{% url 'users:register' %}" title="My Account">Register</a></li>
+          {% endif %}
+
+          {% if user.is_staff %}
+            <li><a href="{% url 'kitchen:kitchen' %}" title="See orders"><i class="material-icons">replay</i></a></li>
+          {% endif %}
+
         </ul>
       </div>
     </nav>

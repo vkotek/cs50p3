@@ -119,5 +119,8 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         return Response({'response':"OK!"})
 
+    def update(self, request, pk):
+        print('OrderViewSet.put()')
+        Order.objects.filter(id=pk).update(completed_date=datetime.now(), customer=request.user.id)
 
-        
+        return Response({'response':"OK!"})

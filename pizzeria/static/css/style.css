@@ -1,0 +1,15 @@
+ul.errorlist {
+    font-size: 0.8em;
+    color: #ee6e73;
+}
+
+
+.material-icons.green {
+    color: green;
+    background-color: #ffffff00  !important;
+}
+
+.material-icons.orange {
+    color: orange;
+    background-color: #ffffff00 !important;
+}

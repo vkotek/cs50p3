@@ -1,22 +1,31 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Register
 {% endblock %}
 
+{% block head %}
+<style>
+.helptext {
+    display: none;
+}
+</style>
+{% endblock %}
+
 {% block body %}
-<div class="col-md-6 offset-md-3">
-  <h1>Register</h1>
-  {% if message %}
-      <div>
-          {{ message }}
-      </div>
-  {% endif %}
-  <form action="{% url 'users:register' %}" method="post">
-      {% csrf_token %}
-      {% form %}
-      <input type="submit" value="Register"/>
-  </form>
+<div class="row">
+    <div class="col s4 offset-s4 ">
+        <h1>Sign up</h1>
+        {% if message %}
+            <div>
+                {{ message }}
+            </div>
+        {% endif %}
+        <form action="{% url 'users:register' %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" class="btn right" value="Sign up"/>
+        </form>
+    </div>
 </div>
 {% endblock %}
