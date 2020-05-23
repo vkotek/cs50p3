@@ -1,6 +1,7 @@
 # cs50p3 - Pizzeria
 
 ## Setup
+pip install -r requirements.txt
 python manage.py loaddata data.json
 
 
