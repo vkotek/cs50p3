@@ -10,12 +10,18 @@ python manage.py loaddata data.json
 - Build using [Materialize]() - A modern responsive front-end framework based on Material Design
 - Using rest_framework to manage backend API calls
 
+### Structure
+- Apps:
+  - eshop - Primary app holding all models except user
+  - user - Views for user management (authentication, registration, etc)
+  - api - Bak-end API for AJAX calls from the front-end
+  - kitchen - Kitchen view to manage all orders
+  
 ### Entity Relationship Diagram
 ![](images/ERD.png)
 
 ### Process Flow - Add item to Cart
 ![](images/process_flow.png)
-
 
 ### User Management
 - Username is automatically populated with email value on backend
