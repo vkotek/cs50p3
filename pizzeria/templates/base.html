@@ -28,17 +28,17 @@
         <ul class="right hide-on-med-and-down">
 
           {% if user.is_authenticated %}
-          <li>{{ user }}</li>
+            <li>{{ user }}</li>
           {% endif %}
           
           <li><a href="{% url 'eshop:menu' %}" title="Food menu"><i class="material-icons">restaurant_menu</i></a></li>
 
-          {% if user %}
-          <li><a href="{% url 'eshop:cart' %}" title="Shopping cart"><i class="material-icons">local_grocery_store</i></a></li>
-          <li><a href="{% url 'users:logout' %}" title="My Account">Log out</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'eshop:cart' %}" title="Shopping cart"><i class="material-icons">local_grocery_store</i></a></li>
+            <li><a href="{% url 'users:logout' %}" title="Log outt">Log out</a></li>
           {% else %}
-          <li><a href="{% url 'users:user' %}" title="My Account">Log in</a></li>
-          <li><a href="{% url 'users:register' %}" title="My Account">Register</a></li>
+            <li><a href="{% url 'users:user' %}" title="Log in">Log in</a></li>
+            <li><a href="{% url 'users:register' %}" title="Sign up!">Register</a></li>
           {% endif %}
 
           {% if user.is_staff %}

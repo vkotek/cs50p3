@@ -24,6 +24,7 @@ def orders(request):
 
     return render(request, 'eshop/cart.html', context)
 
+@login_required(login_url='/user/')
 def menu(request):
     context = {
         'menu': {},
