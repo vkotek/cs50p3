@@ -13,7 +13,7 @@ python manage.py loaddata data.json
 ### Structure
 - eshop - Primary app holding all models except user
 - user - Views for user management (authentication, registration, etc)
-- api - Bak-end API for AJAX calls from the front-end
+- api - Back-end API for AJAX calls from the front-end
 - kitchen - Kitchen view to manage all orders
   
 ### Entity Relationship Diagram
